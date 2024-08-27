@@ -20,7 +20,7 @@ import {
 import { ExecutionResultV1 } from './casper/preCondorTypes';
 
 import { parseSchemasFromBytes } from './schema';
-import { ParseResult } from './types';
+import { ContractMetadata, ParseResult } from './types';
 import {
   DICTIONARY_PREFIX,
   EVENTS_NAMED_KEY,
