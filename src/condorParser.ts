@@ -2,6 +2,9 @@ import {
   CasperServiceByJsonRPC,
   decodeBase16,
   encodeBase16,
+  ExecutionResult,
+  ExecutionResultV1,
+  ExecutionResultV2,
 } from 'casper-js-sdk';
 import {
   parseBytesWithRemainder,
@@ -12,12 +15,6 @@ import {
   parseEventDataFromBytes,
   parseEventNameWithRemainder,
 } from './event';
-import {
-  ExecutionResult,
-  ExecutionResultV2,
-  RawCLValue,
-} from './casper/condorTypes';
-import { ExecutionResultV1 } from './casper/preCondorTypes';
 
 import { parseSchemasFromBytes } from './schema';
 import { ContractMetadata, ParseResult } from './types';
@@ -25,6 +22,7 @@ import {
   DICTIONARY_PREFIX,
   EVENTS_NAMED_KEY,
   EVENTS_SCHEMA_NAMED_KEY,
+  RawCLValue,
   WithRemainder,
 } from './casper/types';
 
@@ -46,7 +44,7 @@ export class CondorParser {
   }
 
   public parseExecutionResult(executionResultRaw: any): ParseResult[] {
-    let executionResult = executionResultRaw as ExecutionResult;
+    const executionResult = executionResultRaw as ExecutionResult;
     if (!isSuccessfull(executionResult)) {
       throw new Error('failed transaction');
     }
@@ -257,7 +255,10 @@ function handleVersion1(
   const results: ParseResult[] = [];
 
   for (const transform of transforms) {
-    if (!transform.transform.WriteCLValue) {
+    if (
+      typeof transform.transform === 'string' ||
+      !('WriteCLValue' in transform.transform)
+    ) {
       continue;
     }
 

@@ -26,8 +26,7 @@ import {
   resultHelper,
 } from 'casper-js-sdk';
 import { Err, Ok } from 'ts-results';
-import { WithRemainder } from './types';
-import { RawCLValue } from './condorTypes';
+import { RawCLValue, WithRemainder } from './types';
 
 export function parseBytesWithRemainder(
   rawBytes: Uint8Array,
