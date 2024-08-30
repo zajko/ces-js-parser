@@ -2,6 +2,7 @@ import {
   CasperServiceByJsonRPC,
   decodeBase16,
   encodeBase16,
+  ExecutionResult,
 } from 'casper-js-sdk-pre-condor';
 import {
   parseBytesWithRemainder,
@@ -12,7 +13,6 @@ import {
   parseEventDataFromBytes,
   parseEventNameWithRemainder,
 } from './event';
-import { ExecutionResultV1 } from './casper/preCondorTypes';
 import { parseSchemasFromBytes } from './schema';
 import { ContractMetadata, ParseResult } from './types';
 import {
@@ -20,8 +20,8 @@ import {
   EVENTS_NAMED_KEY,
   EVENTS_SCHEMA_NAMED_KEY,
   WithRemainder,
+  RawCLValue,
 } from './casper/types';
-import { RawCLValue } from './casper/condorTypes';
 
 export class PreCondorParser {
   constructor(
@@ -41,7 +41,7 @@ export class PreCondorParser {
   }
 
   public parseExecutionResult(executionResultRaw: any): ParseResult[] {
-    let executionResult = executionResultRaw as ExecutionResultV1;
+    const executionResult = executionResultRaw as ExecutionResult;
     if (!executionResult.Success) {
       throw new Error('failed deploy');
     }
@@ -49,7 +49,10 @@ export class PreCondorParser {
     const results: ParseResult[] = [];
 
     for (const transform of executionResult.Success.effect.transforms) {
-      if (!transform.transform.WriteCLValue) {
+      if (
+        typeof transform.transform === 'string' ||
+        !('WriteCLValue' in transform.transform)
+      ) {
         continue;
       }
 

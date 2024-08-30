@@ -8,8 +8,8 @@ export {
   parseEventDataFromBytes,
   parseEventNameWithRemainder,
 } from './event';
-export { ExecutionResult as CondorExecutionResult } from './casper/condorTypes';
-export { ExecutionResultV1 as ExecutionResult } from './casper/preCondorTypes';
+export { ExecutionResult as CondorExecutionResult } from 'casper-js-sdk';
+export { ExecutionResult } from 'casper-js-sdk-pre-condor';
 export {
   parseBytesWithRemainder,
   parseCLValueFromBytesWithRemainder,
